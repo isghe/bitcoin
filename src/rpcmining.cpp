@@ -204,6 +204,11 @@ Value setgenerate(const Array& params, bool fHelp)
     else // Not -regtest: start generate thread, return immediately
     {
         mapArgs["-gen"] = (fGenerate ? "1" : "0");
+        {
+            std::stringstream ss;
+            ss << nGenProcLimit;
+            mapArgs ["-genproclimit"] = ss.str ();
+        }
         GenerateBitcoins(fGenerate, pwalletMain, nGenProcLimit);
     }
 
