@@ -521,7 +521,7 @@ bool CWallet::Verify()
         fs::path wallet_path = fs::absolute(walletFile, GetDataDir());
 
         if (fs::exists(wallet_path) && (!fs::is_regular_file(wallet_path) || (fs::is_symlink(wallet_path) && !allowSymbolicLink()))) {
-            return InitError(strprintf(_("Error loading wallet %s. -wallet filename must be a regular file."), walletFile));
+            return InitError(strprintf(_("Error loading wallet %s. -wallet filename must be a regular file, otherwise -walletallowsymboliclink must be set to 1"), walletFile));
         }
 
         if (!wallet_paths.insert(wallet_path).second) {
