@@ -34,6 +34,7 @@ std::string GetWalletHelpString(bool showDebug)
     strUsage += HelpMessageOpt("-spendzeroconfchange", strprintf(_("Spend unconfirmed change when sending transactions (default: %u)"), DEFAULT_SPEND_ZEROCONF_CHANGE));
     strUsage += HelpMessageOpt("-txconfirmtarget=<n>", strprintf(_("If paytxfee is not set, include enough fee so transactions begin confirmation on average within n blocks (default: %u)"), DEFAULT_TX_CONFIRM_TARGET));
     strUsage += HelpMessageOpt("-walletrbf", strprintf(_("Send transactions with full-RBF opt-in enabled (RPC only, default: %u)"), DEFAULT_WALLET_RBF));
+    strUsage += HelpMessageOpt("-walletallowsymboliclink", strprintf(_("Allow symbolic link for wallet (default: %u)"), DEFAULT_WALLET_ALLOW_SYMBOLIC_LINK));
     strUsage += HelpMessageOpt("-upgradewallet", _("Upgrade wallet to latest format on startup"));
     strUsage += HelpMessageOpt("-wallet=<file>", _("Specify wallet file (within data directory)") + " " + strprintf(_("(default: %s)"), DEFAULT_WALLET_DAT));
     strUsage += HelpMessageOpt("-walletbroadcast", _("Make the wallet broadcast transactions") + " " + strprintf(_("(default: %u)"), DEFAULT_WALLETBROADCAST));
@@ -201,6 +202,11 @@ void RegisterWalletRPC(CRPCTable &t)
     RegisterWalletRPCCommands(t);
 }
 
+static bool allowSymbolicLink()
+{
+	return gArgs.GetBoolArg("-walletallowsymboliclink", DEFAULT_WALLET_ALLOW_SYMBOLIC_LINK);
+}
+
 bool VerifyWallets()
 {
     if (gArgs.GetBoolArg("-disablewallet", DEFAULT_DISABLE_WALLET)) {
@@ -236,8 +242,8 @@ bool VerifyWallets()
 
         fs::path wallet_path = fs::absolute(walletFile, GetWalletDir());
 
-        if (fs::exists(wallet_path) && (!fs::is_regular_file(wallet_path) || fs::is_symlink(wallet_path))) {
-            return InitError(strprintf(_("Error loading wallet %s. -wallet filename must be a regular file."), walletFile));
+        if (fs::exists(wallet_path) && (!fs::is_regular_file(wallet_path) || (fs::is_symlink(wallet_path) && !allowSymbolicLink()))) {
+            return InitError(strprintf(_("Error loading wallet %s. -wallet filename must be a regular file, otherwise -walletallowsymboliclink must be set to 1."), walletFile));
         }
 
         if (!wallet_paths.insert(wallet_path).second) {
