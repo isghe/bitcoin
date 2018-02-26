@@ -66,6 +66,8 @@ static const unsigned int DEFAULT_TX_CONFIRM_TARGET = 6;
 static const bool DEFAULT_WALLET_RBF = false;
 static const bool DEFAULT_WALLETBROADCAST = true;
 static const bool DEFAULT_DISABLE_WALLET = false;
+//! -walletallowsymboliclink default
+static const bool DEFAULT_WALLET_ALLOW_SYMBOLIC_LINK = false;
 
 extern const char * DEFAULT_WALLET_DAT;
 
