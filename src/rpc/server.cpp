@@ -13,6 +13,7 @@
 #include <ui_interface.h>
 #include <util.h>
 #include <utilstrencodings.h>
+#include <validation.h>
 
 #include <boost/bind.hpp>
 #include <boost/signals2/signal.hpp>
@@ -37,6 +38,30 @@ static struct CRPCSignals
     boost::signals2::signal<void ()> Stopped;
     boost::signals2::signal<void (const CRPCCommand&)> PreCommand;
 } g_rpcSignals;
+
+
+RPCCommandMap* CRPCCommand::gCommandMap = nullptr;
+
+CRPCCommand::CRPCCommand(const std::string& _category, const std::string& _name, const rpcfn_type _actor, const std::vector<std::string>& _argNames):
+category(_category), name(_name), actor(_actor), argNames(_argNames)
+{
+    if (nullptr == CRPCCommand::gCommandMap) {
+        CRPCCommand::gCommandMap = new RPCCommandMap;
+    }
+
+    if (CRPCCommand::gCommandMap->find(this->category) == CRPCCommand::gCommandMap->end()) {
+        const auto aPair = std::make_pair(this->category, 0);
+        CRPCCommand::gCommandMap->insert(aPair);
+    }
+
+    (*CRPCCommand::gCommandMap)[category]++;
+}
+
+const RPCCommandMap * CRPCCommand::getCommandMap()
+{
+    assert(nullptr != CRPCCommand::gCommandMap);
+    return CRPCCommand::gCommandMap;
+}
 
 void RPCServer::OnStarted(std::function<void ()> slot)
 {
@@ -252,6 +277,38 @@ static UniValue uptime(const JSONRPCRequest& jsonRequest)
     return GetTime() - GetStartupTime();
 }
 
+static UniValue getrpccategoryinfo(const JSONRPCRequest& request)
+{
+    if (request.fHelp || request.params.size() > 1) {
+        throw std::runtime_error(
+                "getrpccategoryinfo\n"
+                        "\nJust for debugging: DONT MERGE IN PRODUCTION!\n"
+                        "\nReturns infos on RPCCategory.\n"
+                        "\nResult:\n"
+                        "{\n"
+                        "…\n"
+                        "    \"RPCCategory\": the number of commands in this category\n"
+                        "…\n"
+                        "}\n"
+                        "\nExamples:\n"
+                + HelpExampleCli("getcategoryinfo", "")
+                + HelpExampleRpc("getcategoryinfo", "")
+        );
+    }
+
+    LOCK(cs_main);
+
+    UniValue obj(UniValue::VOBJ);
+
+    const RPCCommandMap* commandMap = CRPCCommand::getCommandMap();
+    std::for_each(commandMap->begin(), commandMap->end(), [&obj](const RPCCommandMap::value_type &thePair)
+    {
+        obj.pushKV(thePair.first, thePair.second);
+    });
+
+    return obj;
+}
+
 /**
  * Call Table
  */
@@ -262,6 +319,7 @@ static const CRPCCommand vRPCCommands[] =
     { "control",            "help",                   &help,                   {"command"}  },
     { "control",            "stop",                   &stop,                   {}  },
     { "control",            "uptime",                 &uptime,                 {}  },
+    { "developer",          "getrpccategoryinfo",     &getrpccategoryinfo,     {}  },
 };
 
 CRPCTable::CRPCTable()

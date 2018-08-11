@@ -128,13 +128,21 @@ void RPCRunLater(const std::string& name, std::function<void(void)> func, int64_
 
 typedef UniValue(*rpcfn_type)(const JSONRPCRequest& jsonRequest);
 
+typedef std::map<std::string, unsigned short> RPCCommandMap;
+
 class CRPCCommand
 {
+private:
+	static RPCCommandMap* gCommandMap;
 public:
-    std::string category;
-    std::string name;
-    rpcfn_type actor;
-    std::vector<std::string> argNames;
+	static const RPCCommandMap* getCommandMap();
+public:
+    const std::string category;
+    const std::string name;
+    const rpcfn_type actor;
+    const std::vector<std::string> argNames;
+
+    CRPCCommand (const std::string &category, const std::string &name, const rpcfn_type actor, const std::vector<std::string> &argNames);
 };
 
 /**
