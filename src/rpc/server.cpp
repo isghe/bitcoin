@@ -158,7 +158,7 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
     std::vector<std::pair<std::string, const CRPCCommand*> > vCommands;
 
     for (const auto& entry : mapCommands)
-        vCommands.push_back(make_pair(entry.second->category + entry.first, entry.second));
+        vCommands.emplace_back(rpccategory::Label(entry.second->category) + entry.first, entry.second);
     sort(vCommands.begin(), vCommands.end());
 
     JSONRPCRequest jreq(helpreq);
@@ -169,7 +169,7 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
     {
         const CRPCCommand *pcmd = command.second;
         std::string strMethod = pcmd->name;
-        if ((strCommand != "" || pcmd->category == "hidden") && strMethod != strCommand)
+        if ((strCommand != "" || pcmd->category == RPCCategory::hidden) && strMethod != strCommand)
             continue;
         jreq.strMethod = strMethod;
         try
@@ -187,11 +187,11 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
                 if (strHelp.find('\n') != std::string::npos)
                     strHelp = strHelp.substr(0, strHelp.find('\n'));
 
-                if (category != pcmd->category)
+                if (category != rpccategory::Label(pcmd->category))
                 {
                     if (!category.empty())
                         strRet += "\n";
-                    category = pcmd->category;
+                    category = rpccategory::Label(pcmd->category);
                     std::string firstLetter = category.substr(0,1);
                     boost::to_upper(firstLetter);
                     strRet += "== " + firstLetter + category.substr(1) + " ==\n";
@@ -262,9 +262,9 @@ static const CRPCCommand vRPCCommands[] =
 { //  category              name                      actor (function)         argNames
   //  --------------------- ------------------------  -----------------------  ----------
     /* Overall control/query calls */
-    { "control",            "help",                   &help,                   {"command"}  },
-    { "control",            "stop",                   &stop,                   {}  },
-    { "control",            "uptime",                 &uptime,                 {}  },
+    { RPCCategory::control,            "help",                   &help,                   {"command"}  },
+    { RPCCategory::control,            "stop",                   &stop,                   {}  },
+    { RPCCategory::control,            "uptime",                 &uptime,                 {}  },
 };
 
 CRPCTable::CRPCTable()
