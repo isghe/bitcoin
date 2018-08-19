@@ -9,18 +9,17 @@
 
 enum class RPCCategory
 {
-    // be careful, these identifiers are shown to the end user, through the rpccategory::Label function
-    blockchain,
-    control,
-    generating,
-    hidden,
-    mining,
-    network,
-    rawtransactions,
-    util,
-    wallet,
-    zmq,
-    test
+    BLOCKCHAIN,
+    CONTROL,
+    GENERATING,
+    HIDDEN,
+    MINING,
+    NETWORK,
+    RAWTRANSACTIONS,
+    UTIL,
+    WALLET,
+    ZMQ,
+    TEST
 };
 
 namespace rpccategory

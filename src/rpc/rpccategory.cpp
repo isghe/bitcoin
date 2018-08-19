@@ -11,30 +11,21 @@ namespace rpccategory
 
 std::string Label(const RPCCategory category)
 {
-    // check `enum class RPCCategory`
-    #ifdef HANDLE_CASE_RETURN
-    #error "HANDLE_CASE_RETURN already defined"
-    #else
-    #define HANDLE_CASE_RETURN(classname,member) case classname::member: return #member
-    #endif
-
-    switch (category)
-    {
-            HANDLE_CASE_RETURN(RPCCategory, blockchain);
-            HANDLE_CASE_RETURN(RPCCategory, control);
-            HANDLE_CASE_RETURN(RPCCategory, generating);
-            HANDLE_CASE_RETURN(RPCCategory, hidden);
-            HANDLE_CASE_RETURN(RPCCategory, mining);
-            HANDLE_CASE_RETURN(RPCCategory, network);
-            HANDLE_CASE_RETURN(RPCCategory, rawtransactions);
-            HANDLE_CASE_RETURN(RPCCategory, util);
-            HANDLE_CASE_RETURN(RPCCategory, wallet);
-            HANDLE_CASE_RETURN(RPCCategory, zmq);
-            HANDLE_CASE_RETURN(RPCCategory, test);
-            // if you are missing a case, you'll have a warning here
+    switch (category) {
+        case RPCCategory::BLOCKCHAIN: return "blockchain";
+        case RPCCategory::CONTROL: return "control";
+        case RPCCategory::GENERATING: return "generating";
+        case RPCCategory::HIDDEN: return "hidden";
+        case RPCCategory::MINING: return "mining";
+        case RPCCategory::NETWORK: return "network";
+        case RPCCategory::RAWTRANSACTIONS: return "rawtransactions";
+        case RPCCategory::UTIL: return "util";
+        case RPCCategory::WALLET: return "wallet";
+        case RPCCategory::ZMQ: return "zmq";
+        case RPCCategory::TEST: return "test";
+        // if you are missing a case, you'll have a warning here
     }
     assert(0); // never fall down here
-    #undef HANDLE_CASE_RETURN
 }
 
 } // namespace rpccategory

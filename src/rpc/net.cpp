@@ -627,18 +627,18 @@ static UniValue setnetworkactive(const JSONRPCRequest& request)
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
   //  --------------------- ------------------------  -----------------------  ----------
-    { RPCCategory::network,            "getconnectioncount",     &getconnectioncount,     {} },
-    { RPCCategory::network,            "ping",                   &ping,                   {} },
-    { RPCCategory::network,            "getpeerinfo",            &getpeerinfo,            {} },
-    { RPCCategory::network,            "addnode",                &addnode,                {"node","command"} },
-    { RPCCategory::network,            "disconnectnode",         &disconnectnode,         {"address", "nodeid"} },
-    { RPCCategory::network,            "getaddednodeinfo",       &getaddednodeinfo,       {"node"} },
-    { RPCCategory::network,            "getnettotals",           &getnettotals,           {} },
-    { RPCCategory::network,            "getnetworkinfo",         &getnetworkinfo,         {} },
-    { RPCCategory::network,            "setban",                 &setban,                 {"subnet", "command", "bantime", "absolute"} },
-    { RPCCategory::network,            "listbanned",             &listbanned,             {} },
-    { RPCCategory::network,            "clearbanned",            &clearbanned,            {} },
-    { RPCCategory::network,            "setnetworkactive",       &setnetworkactive,       {"state"} },
+    { RPCCategory::NETWORK,            "getconnectioncount",     &getconnectioncount,     {} },
+    { RPCCategory::NETWORK,            "ping",                   &ping,                   {} },
+    { RPCCategory::NETWORK,            "getpeerinfo",            &getpeerinfo,            {} },
+    { RPCCategory::NETWORK,            "addnode",                &addnode,                {"node","command"} },
+    { RPCCategory::NETWORK,            "disconnectnode",         &disconnectnode,         {"address", "nodeid"} },
+    { RPCCategory::NETWORK,            "getaddednodeinfo",       &getaddednodeinfo,       {"node"} },
+    { RPCCategory::NETWORK,            "getnettotals",           &getnettotals,           {} },
+    { RPCCategory::NETWORK,            "getnetworkinfo",         &getnetworkinfo,         {} },
+    { RPCCategory::NETWORK,            "setban",                 &setban,                 {"subnet", "command", "bantime", "absolute"} },
+    { RPCCategory::NETWORK,            "listbanned",             &listbanned,             {} },
+    { RPCCategory::NETWORK,            "clearbanned",            &clearbanned,            {} },
+    { RPCCategory::NETWORK,            "setnetworkactive",       &setnetworkactive,       {"state"} },
 };
 
 void RegisterNetRPCCommands(CRPCTable &t)

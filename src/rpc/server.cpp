@@ -169,7 +169,7 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
     {
         const CRPCCommand *pcmd = command.second;
         std::string strMethod = pcmd->name;
-        if ((strCommand != "" || pcmd->category == RPCCategory::hidden) && strMethod != strCommand)
+        if ((strCommand != "" || pcmd->category == RPCCategory::HIDDEN) && strMethod != strCommand)
             continue;
         jreq.strMethod = strMethod;
         try
@@ -262,9 +262,9 @@ static const CRPCCommand vRPCCommands[] =
 { //  category              name                      actor (function)         argNames
   //  --------------------- ------------------------  -----------------------  ----------
     /* Overall control/query calls */
-    { RPCCategory::control,            "help",                   &help,                   {"command"}  },
-    { RPCCategory::control,            "stop",                   &stop,                   {}  },
-    { RPCCategory::control,            "uptime",                 &uptime,                 {}  },
+    { RPCCategory::CONTROL,            "help",                   &help,                   {"command"}  },
+    { RPCCategory::CONTROL,            "stop",                   &stop,                   {}  },
+    { RPCCategory::CONTROL,            "uptime",                 &uptime,                 {}  },
 };
 
 CRPCTable::CRPCTable()
