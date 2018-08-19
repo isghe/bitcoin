@@ -188,6 +188,7 @@
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)\netrpc.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\..\src\rpc\rawtransaction.cpp" />
+    <ClCompile Include="..\..\src\rpc\rpccategory.cpp" />
     <ClCompile Include="..\..\src\rpc\server.cpp" />
     <ClCompile Include="..\..\src\rpc\util.cpp" />
     <ClCompile Include="..\..\src\script\ismine.cpp" />
