@@ -153,7 +153,8 @@ std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKey)
 std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest& helpreq) const
 {
     std::string strRet;
-    std::string category;
+    RPCCategory category;
+    bool uninitializedCategory = true;
     std::set<rpcfn_type> setDone;
     std::vector<std::pair<std::string, const CRPCCommand*> > vCommands;
 
@@ -187,14 +188,17 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
                 if (strHelp.find('\n') != std::string::npos)
                     strHelp = strHelp.substr(0, strHelp.find('\n'));
 
-                if (category != rpccategory::Label(pcmd->category))
+                if (uninitializedCategory || category != pcmd->category)
                 {
-                    if (!category.empty())
+                    if (uninitializedCategory)
+                        uninitializedCategory = false;
+                    else
                         strRet += "\n";
-                    category = rpccategory::Label(pcmd->category);
-                    std::string firstLetter = category.substr(0,1);
+                    category = pcmd->category;
+                    const std::string label = rpccategory::Label (category);
+                    std::string firstLetter = label.substr(0,1);
                     boost::to_upper(firstLetter);
-                    strRet += "== " + firstLetter + category.substr(1) + " ==\n";
+                    strRet += "== " + firstLetter + label.substr(1) + " ==\n";
                 }
             }
             strRet += strHelp + "\n";
