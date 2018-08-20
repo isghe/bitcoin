@@ -23,9 +23,8 @@ std::string Label(const RPCCategory category)
         case RPCCategory::WALLET: return "wallet";
         case RPCCategory::ZMQ: return "zmq";
         case RPCCategory::TEST: return "test";
-        // if you are missing a case, you'll have a warning here
     }
-    assert(0); // never fall down here
+    assert(false);
 }
 
 } // namespace rpccategory
