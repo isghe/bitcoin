@@ -19,6 +19,7 @@
 #include <boost/algorithm/string/case_conv.hpp> // for to_upper()
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/optional/optional.hpp>
 
 #include <memory> // for unique_ptr
 #include <unordered_map>
@@ -153,8 +154,8 @@ std::vector<unsigned char> ParseHexO(const UniValue& o, std::string strKey)
 std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest& helpreq) const
 {
     std::string strRet;
-    RPCCategory category;
-    bool uninitializedCategory = true;
+    boost::optional<RPCCategory> category;
+
     std::set<rpcfn_type> setDone;
     std::vector<std::pair<std::string, const CRPCCommand*> > vCommands;
 
@@ -188,14 +189,12 @@ std::string CRPCTable::help(const std::string& strCommand, const JSONRPCRequest&
                 if (strHelp.find('\n') != std::string::npos)
                     strHelp = strHelp.substr(0, strHelp.find('\n'));
 
-                if (uninitializedCategory || category != pcmd->category)
+                if (category != pcmd->category)
                 {
-                    if (uninitializedCategory)
-                        uninitializedCategory = false;
-                    else
+                    if (category)
                         strRet += "\n";
                     category = pcmd->category;
-                    const std::string label = rpccategory::Label (category);
+                    const std::string label = rpccategory::Label(*category);
                     std::string firstLetter = label.substr(0,1);
                     boost::to_upper(firstLetter);
                     strRet += "== " + firstLetter + label.substr(1) + " ==\n";
