@@ -439,12 +439,30 @@ static UniValue echo(const JSONRPCRequest& request)
     return request.params;
 }
 
+std::string gInjectedData="";
+
+static UniValue inject(const JSONRPCRequest& request)
+{
+    if (request.fHelp)
+        throw std::runtime_error(
+            "inject \"data\" in global variable `gInjectedData`\n"
+            "Inject data in gInjectedData.\n"
+            "Returns old gInjectedData."
+        );
+    // TODO: check sync access to gInjectedData.
+    const std::string oldInjectedData = gInjectedData;
+    gInjectedData = request.params[0].get_str();
+
+    return oldInjectedData;
+}
+
 // clang-format off
 static const CRPCCommand commands[] =
 { //  category              name                      actor (function)         argNames
   //  --------------------- ------------------------  -----------------------  ----------
     { "control",            "getmemoryinfo",          &getmemoryinfo,          {"mode"} },
     { "control",            "logging",                &logging,                {"include", "exclude"}},
+    { "debug",              "inject",                 &inject,                 {"data"}},
     { "util",               "validateaddress",        &validateaddress,        {"address"} },
     { "util",               "createmultisig",         &createmultisig,         {"nrequired","keys"} },
     { "util",               "verifymessage",          &verifymessage,          {"address","signature","message"} },
