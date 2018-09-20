@@ -8,6 +8,7 @@
 #include <primitives/transaction.h>
 #include <script/interpreter.h>
 #include <consensus/validation.h>
+#include <util.h>
 
 // TODO remove the following dependencies
 #include <chain.h>
@@ -155,11 +156,16 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
     }
     return nSigOps;
 }
-bool IGFailCheckTransaction (){
-	return false;
+
+bool IGFailCheckTransaction(){
+    extern std::string gInjectedData;
+    // TODO: add sync access to global variable gInjectedData
+    return gInjectedData == "FailCheckTransaction";
 }
+
 bool CheckTransaction(const CTransaction& tx, CValidationState &state, bool fCheckDuplicateInputs)
 {
+    LogPrintf("%s: fCheckDuplicateInputs: %d, tx: %s;\n", __PRETTY_FUNCTION__, fCheckDuplicateInputs, tx.ToString());
     // Basic checks that don't depend on any context
     if (tx.vin.empty())
         return state.DoS(10, false, REJECT_INVALID, "bad-txns-vin-empty");
