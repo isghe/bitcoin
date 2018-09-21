@@ -569,7 +569,7 @@ static bool AcceptToMemoryPoolWorker(const CChainParams& chainparams, CTxMemPool
         *pfMissingInputs = false;
     }
 
-    if (!CheckTransaction(tx, state))
+    if (!CheckTransaction(tx, state, ECheckTransaction::CHECK_DUPLICATE_INPUTS))
         return false; // state filled in by CheckTransaction
 
     // Coinbase is only valid in a block, not as a loose transaction
