@@ -17,6 +17,11 @@ class CValidationState;
 
 /** Transaction validation functions */
 
+enum class ECheckTransaction {
+	DONT_CHECK_DUPLICATE_INPUTS,
+	CHECK_DUPLICATE_INPUTS
+};
+
 /** Context-independent validity checks */
 bool CheckTransaction(const CTransaction& tx, CValidationState& state, bool fCheckDuplicateInputs=true);
 
