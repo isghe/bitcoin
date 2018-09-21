@@ -156,7 +156,7 @@ int64_t GetTransactionSigOpCost(const CTransaction& tx, const CCoinsViewCache& i
     return nSigOps;
 }
 
-bool CheckTransaction(const CTransaction& tx, CValidationState &state, ECheckTransaction fCheckDuplicateInputs)
+bool CheckTransaction(const CTransaction& tx, CValidationState &state, const ECheckTransaction fCheckDuplicateInputs)
 {
     // Basic checks that don't depend on any context
     if (tx.vin.empty())

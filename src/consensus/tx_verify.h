@@ -23,7 +23,7 @@ enum class ECheckTransaction {
 };
 
 /** Context-independent validity checks */
-bool CheckTransaction(const CTransaction& tx, CValidationState& state, ECheckTransaction fCheckDuplicateInputs=ECheckTransaction::CHECK_DUPLICATE_INPUTS);
+bool CheckTransaction(const CTransaction& tx, CValidationState& state, const ECheckTransaction fCheckDuplicateInputs=ECheckTransaction::CHECK_DUPLICATE_INPUTS);
 
 namespace Consensus {
 /**
