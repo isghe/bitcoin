@@ -1281,6 +1281,7 @@ class FullBlockTest(ComparisonTestFramework):
             # ... and re-org back to the first chain
             tip(chain1_tip)
             block(chain1_tip + 1)
+            import pdb; pdb.set_trace()
             yield rejected()
             block(chain1_tip + 2)
             yield accepted()
