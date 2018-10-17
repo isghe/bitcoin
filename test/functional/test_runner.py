@@ -362,17 +362,17 @@ def run_tests(test_list, src_dir, build_dir, tmpdir, jobs=1, enable_coverage=Fal
     test_results = []
 
     max_len_name = len(max(test_list, key=len))
-
-    for _ in range(len(test_list)):
+    test_count = len(test_list)
+    for i in range(test_count):
         test_result, testdir, stdout, stderr = job_queue.get_next()
         test_results.append(test_result)
 
         if test_result.status == "Passed":
-            logging.debug("\n%s%s%s passed, Duration: %s s" % (BOLD[1], test_result.name, BOLD[0], test_result.time))
+            logging.debug("\n%s/%s - %s%s%s passed, Duration: %s s" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0], test_result.time))
         elif test_result.status == "Skipped":
-            logging.debug("\n%s%s%s skipped" % (BOLD[1], test_result.name, BOLD[0]))
+            logging.debug("\n%s/%s - %s%s%s skipped" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0]))
         else:
-            print("\n%s%s%s failed, Duration: %s s\n" % (BOLD[1], test_result.name, BOLD[0], test_result.time))
+            print("\n%s/%s - %s%s%s failed, Duration: %s s\n" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0], test_result.time))
             print(BOLD[1] + 'stdout:\n' + BOLD[0] + stdout + '\n')
             print(BOLD[1] + 'stderr:\n' + BOLD[0] + stderr + '\n')
             if combined_logs_len and os.path.isdir(testdir):
