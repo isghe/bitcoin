@@ -368,11 +368,11 @@ def run_tests(test_list, src_dir, build_dir, tmpdir, jobs=1, enable_coverage=Fal
         test_results.append(test_result)
 
         if test_result.status == "Passed":
-            logging.debug("\n%s/%s - %s%s%s passed, Duration: %s s" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0], test_result.time))
+            logging.debug("%s/%s - %s%s%s passed, Duration: %s s" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0], test_result.time))
         elif test_result.status == "Skipped":
-            logging.debug("\n%s/%s - %s%s%s skipped" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0]))
+            logging.debug("%s/%s - %s%s%s skipped" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0]))
         else:
-            print("\n%s/%s - %s%s%s failed, Duration: %s s\n" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0], test_result.time))
+            print("%s/%s - %s%s%s failed, Duration: %s s\n" % (i + 1, test_count, BOLD[1], test_result.name, BOLD[0], test_result.time))
             print(BOLD[1] + 'stdout:\n' + BOLD[0] + stdout + '\n')
             print(BOLD[1] + 'stderr:\n' + BOLD[0] + stderr + '\n')
             if combined_logs_len and os.path.isdir(testdir):
@@ -432,6 +432,7 @@ def print_results(test_results, max_len_name, runtime):
         results += RED[0]
     results += "Runtime: %s s\n" % (runtime)
     print(results)
+SPINNER = '|/-\\'
 
 class TestHandler:
     """
@@ -471,9 +472,13 @@ class TestHandler:
                               log_stderr))
         if not self.jobs:
             raise IndexError('pop from empty list')
+        spin = 0
         while True:
             # Return first proc that finishes
+            print(SPINNER[spin], end='', flush=True)
+            spin = (spin + 1) % len(SPINNER)
             time.sleep(.5)
+            print('\r', end='', flush=True)
             for job in self.jobs:
                 (name, start_time, proc, testdir, log_out, log_err) = job
                 if os.getenv('TRAVIS') == 'true' and int(time.time() - start_time) > TRAVIS_TIMEOUT_DURATION:
@@ -493,7 +498,6 @@ class TestHandler:
                     self.jobs.remove(job)
 
                     return TestResult(name, status, int(time.time() - start_time)), testdir, stdout, stderr
-            print('.', end='', flush=True)
 
     def kill_and_join(self):
         """Send SIGKILL to all jobs and block until all have ended."""
