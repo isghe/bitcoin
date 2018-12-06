@@ -1186,6 +1186,26 @@ fs::path GetSpecialFolderPath(int nFolder, bool fCreate)
 }
 #endif
 
+void runCommandWithOutput(const std::string& strCommand){
+    assert(!strCommand.empty());
+
+    FILE * stream = popen(strCommand.c_str(), "r");
+
+    if (!stream) {
+        LogPrintf("runCommand error: popen(%s) returned %p\n", strCommand, stream);
+    }
+    else{
+        char buffer[1024+1] = {0};
+        while (!feof(stream)){
+            if (fgets(buffer, 1024, stream) != NULL){
+                LogPrintf("runCommandPopen: %s", buffer);
+            }
+        }
+        pclose(stream);
+        stream = NULL;
+    }
+}
+
 void runCommand(const std::string& strCommand)
 {
     if (strCommand.empty()) return;
