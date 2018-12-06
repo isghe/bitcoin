@@ -445,6 +445,11 @@ CMutableTransaction ConstructTransaction(const UniValue& inputs_in, const UniVal
         throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter combination: Sequence number(s) contradict replaceable option");
     }
 
+    const CTransaction rawTxCopy (rawTx);
+    std::string error;
+    if (!IsStandardTx (rawTxCopy, error)) {
+        throw JSONRPCError(RPC_INVALID_PARAMETER, "Invalid parameter combination: " + error);
+    }
     return rawTx;
 }
 
