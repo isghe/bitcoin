@@ -875,7 +875,7 @@ bool CWallet::AddToWallet(const CWalletTx& wtxIn, bool fFlushOnClose)
         // https://github.com/bitcoin/bitcoin/pull/13339#issuecomment-461288094
         boost::replace_all(strCmd, "%w", ShellEscape(GetName()));
 #endif
-        std::thread t(runCommand, strCmd);
+        std::thread t(runCommandWithOutput, strCmd);
         t.detach(); // thread runs free
     }
 #endif
