@@ -86,7 +86,7 @@ fs::path GetSpecialFolderPath(int nFolder, bool fCreate = true);
 std::string ShellEscape(const std::string& arg);
 #endif
 #if HAVE_SYSTEM
-void runCommandWithOutput(const std::string& strCommand);
+void runCommandWithOutput(const std::string& strCommand, const char * notify);
 void runCommand(const std::string& strCommand);
 #endif
 

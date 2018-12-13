@@ -1312,7 +1312,7 @@ static void AlertNotify(const std::string& strMessage)
     safeStatus = singleQuote+safeStatus+singleQuote;
     boost::replace_all(strCmd, "%s", safeStatus);
 
-    std::thread t(runCommandWithOutput, strCmd);
+    std::thread t(runCommandWithOutput, strCmd, "alertnotify");
     t.detach(); // thread runs free
 #endif
 }

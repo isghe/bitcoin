@@ -1058,25 +1058,28 @@ std::string ShellEscape(const std::string& arg)
 #endif
 
 #if HAVE_SYSTEM
-
-void runCommandWithOutput(const std::string& strCommand){
+void runCommandWithOutput(const std::string& strCommand, const char * notify){
     assert(!strCommand.empty());
-
+    assert(NULL != notify);
+    static int counter = 0;
+    ++counter;
+    LogPrintf ("runCommandWithOutput ('%s', %s) - %d -BEGIN;\n", strCommand, notify, counter);
     FILE * stream = popen(strCommand.c_str(), "r");
 
     if (!stream) {
-        LogPrintf("runCommand error: popen(%s) returned %p\n", strCommand, stream);
+        LogPrintf ("runCommandWithOutput ('%s', %s) - %d - stream is NULL;\n", strCommand, notify, counter);
     }
     else{
         char buffer[1024+1] = {0};
         while (!feof(stream)){
             if (fgets(buffer, 1024, stream) != NULL){
-                LogPrintf("runCommandPopen: %s", buffer);
+                LogPrintf("runCommandPopen - %d: %s", counter, buffer);
             }
         }
         pclose(stream);
         stream = NULL;
     }
+    LogPrintf ("runCommandWithOutput ('%s', %s) - %d - DONE;\n", strCommand, notify, counter);
 }
 
 void runCommand(const std::string& strCommand)
