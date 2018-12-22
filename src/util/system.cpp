@@ -1061,8 +1061,8 @@ std::string ShellEscape(const std::string& arg)
 void runCommandWithOutput(const std::string& strCommand, const char * notify){
     assert(!strCommand.empty());
     assert(NULL != notify);
-    static int counter = 0;
-    ++counter;
+    static std::atomic_int sCounter {0};
+    const int counter = ++sCounter;
     LogPrintf ("runCommandWithOutput ('%s', %s) - %d -BEGIN;\n", strCommand, notify, counter);
     FILE * stream = popen(strCommand.c_str(), "r");
 
